@@ -45,13 +45,15 @@ if (cut < 0) throw new Error('function user_sets() not found in the live user.lu
 let config = liveUser.slice(0, cut)
   .replace('--  SMN - personal configuration', '--  SMN - configuration (copy to SMN-USER/<Character>.lua for a per-character config)')
   .replace(/SMN_MACROS = \{book = \d+, set = \d+\}/, 'SMN_MACROS = {book = nil, set = 1}   -- e.g. {book = 7, set = 1}')
+  // Style lock: off in the package (the player's own equipment set number)
+  .replace(/SMN_LOCKSTYLE = \{set = \d+,/, 'SMN_LOCKSTYLE = {set = nil,')
   // Siphon skill: the player's own value (nil = skill without gear, read from the game)
   .replace(/^(\s*skill\s*=\s*)\d+,(\s*)/m, '$1nil,$2')
   // 'Move' idle mode: kept in the package for players with SMN_AUTO_MOVE = false (removed from the live list)
   .replace(/^(SMN_IDLE_MODES = \{[^}\n]*?)\}/m, (m, list) => list.includes("'Move'") ? m : list + ",'Move'}")
   // debug flags always off in the package (the debug module isn't shipped anyway)
   .replace(/^(\s*debug\s*=\s*)true(\s*,)/gm, '$1false$2');
-for (const check of ['SMN_MACROS = {book = nil']) {
+for (const check of ['SMN_MACROS = {book = nil', 'SMN_LOCKSTYLE = {set = nil,']) {
   if (!config.includes(check)) throw new Error('template: could not neutralize ' + check);
 }
 const sets = fs.readFileSync(path.join(here, 'template', 'sets-pergatory.lua'), 'utf8');

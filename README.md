@@ -110,7 +110,7 @@ Elemental Siphon, Convert, Siphon again, then resting (Siphon is skipped without
 Resummon and avatar death alert, low MP alert, Refresh (Gishdubar Sash only on yourself; a Refresh
 received set while another player casts Refresh on you), Treasure Hunter (Tag / Persistent), movement
 gear while moving (always in towns), Councilor's Garb in Adoulin, optional Town set (equipped over your
-idle set).
+idle set), style lock on load (`SMN_LOCKSTYLE`, sent once the game is ready; `gs c lockstyle` to send it again).
 
 ---
 

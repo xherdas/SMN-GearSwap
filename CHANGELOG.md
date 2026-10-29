@@ -20,7 +20,8 @@ First version shared outside its author. Built on Pergatory's SMN GearSwap.
 - Refresh: Gishdubar Sash only on yourself (`.Self` midcast variant), Refresh received set when another
   player casts Refresh on you.
 - Treasure Hunter Tag / Persistent; movement gear; Adoulin body; optional Town overlay set.
-- Configurable keys, per-character config file (`SMN-USER/<Character>.lua`).
+- Configurable keys, per-character config file (`SMN-USER/<Character>.lua`), macro book and style lock on load
+  (sent once the game is ready, `gs c lockstyle`).
 
 Not yet verified in game (feedback welcome): the Atomos Dispel line and hint, the Refresh received set, and
 Elemental Siphon during skill-up.

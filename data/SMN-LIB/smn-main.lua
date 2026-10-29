@@ -2,7 +2,7 @@
 --  SMN-LIB: GearSwap hooks
 --  Based on Pergatory's hooks and set selection (http://pastebin.com/u/pergatory), with the modes in
 --  state.<Name>, plus: Conduit gear lock, Treasure Hunter, lag timing, action counters, movement gear, town,
---  Refresh received (sets.RefreshReceived when another player casts Refresh on you).
+--  Refresh received (sets.RefreshReceived when another player casts Refresh on you), style lock on load.
 -- ===================================================================================================================
 
 function pretarget(spell,action)
@@ -479,3 +479,48 @@ end)
 windower.register_event('action', function(act)
 	if act.category == 4 and refresh_from and act.actor_id == refresh_from then refresh_back() end
 end)
+
+-- Style lock (SMN_LOCKSTYLE): /lockstyleset once the game is ready. Sent too early (loading, inventory not ready)
+-- or during a warp, cutscene or menu, the game ignores it. So it waits until the character has been ready for
+-- `steady` seconds in a row (in the zone, idle / engaged / resting, no menu open, `after_zone` seconds after
+-- loading or zoning), then sends it once. A warp during the wait restarts the count. gs c lockstyle: send it again.
+local lockstyle_gen, lockstyle_zoned = 0, os.clock()
+local LOCKSTYLE_STATUS = S{0, 1, 33}   -- idle, engaged, resting
+windower.register_event('zone change', function() lockstyle_zoned = os.clock() end)
+
+local function lockstyle_ready(c)
+	local info, p = windower.ffxi.get_info(), windower.ffxi.get_player()
+	if not (info and info.logged_in and p and windower.ffxi.get_mob_by_target('me')) then return false end
+	if p.main_job ~= 'SMN' or info.menu_open or not LOCKSTYLE_STATUS:contains(p.status) then return false end
+	return os.clock() - lockstyle_zoned >= (c.after_zone or 10)
+end
+
+function smn_lockstyle_stop() lockstyle_gen = lockstyle_gen + 1 end
+
+function smn_lockstyle(by_command)
+	local c = type(SMN_LOCKSTYLE) == 'table' and SMN_LOCKSTYLE or {set = SMN_LOCKSTYLE}
+	local set = c.set
+	if type(set) == 'table' then set = set[math.random(#set)] end   -- a list: one at random
+	set = tonumber(set)
+	if not set then
+		if by_command then smn_warn('Style lock: no set in SMN_LOCKSTYLE (user.lua).') end
+		return
+	end
+	smn_lockstyle_stop()
+	local gen, since, left = lockstyle_gen, nil, 600   -- gives up after 10 minutes
+	local function tick()
+		if gen ~= lockstyle_gen then return end
+		if lockstyle_ready(c) then
+			since = since or os.clock()
+			if os.clock() - since >= (c.steady or 3) then
+				send_command('input /lockstyleset ' .. set)
+				return
+			end
+		else
+			since = nil
+		end
+		left = left - 1
+		if left > 0 then coroutine.schedule(tick, 1) end
+	end
+	tick()
+end

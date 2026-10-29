@@ -11,6 +11,8 @@ Feature freeze while this list is in progress: fixes only, no new features.
 - [x] `//gs c help`: first line shows the version and the config file in use; keys and commands are listed.
 - [x] Per-character config: with `SMN-USER/<Character>.lua` present, `gs c help` shows that file.
 - [x] Zoning: the HUD hides during the loading screen and comes back after.
+- [ ] Style lock (`SMN_LOCKSTYLE.set`): applied a few seconds after login / `//gs reload` / job change, even with a
+      warp or a menu open right after loading; `gs c lockstyle` applies it again.
 
 ## 2. Keys and HUD
 - [x] Every default key in the *Available actions* table (top of `user.lua`) does what it says.

@@ -51,6 +51,7 @@ function smn_help()
 		'gs c siphon                Elemental Siphon (spirit of weather / day)',
 		'gs c atomos                Atomos on <t> (steals a buff), then the previous avatar',
 		'gs c resummon              resummon the last avatar',
+		'gs c lockstyle             style lock again (SMN_LOCKSTYLE)',
 		'gs c skill pact | summon | status   gs c stop',
 		'gs c hub avatar|recasts|rage|wards|auto|modes|options|all|keybinds|lite',
 		'gs c opa | custom <mode> | autofavor | smartbuff | weaponlock | kiting',
@@ -237,6 +238,9 @@ local function dispatch(command)
 		return 'silent'
 	elseif cmd == 'resummon' then
 		smn_resummon()
+		return 'silent'
+	elseif cmd == 'lockstyle' then
+		smn_lockstyle(true)
 		return 'silent'
 	elseif cmd == 'debug' then
 		SMN_AUTO.debug = not SMN_AUTO.debug

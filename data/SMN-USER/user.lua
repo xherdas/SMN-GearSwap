@@ -61,6 +61,11 @@ SMN_KEYBINDS = {
 -- Game macros: book and page selected when the file loads (book = nil to change nothing)
 SMN_MACROS = {book = nil, set = 1}   -- e.g. {book = 7, set = 1}
 
+-- Style lock: equipment set sent with /lockstyleset when the file loads (set = nil: no style lock; a list such as
+-- {6, 7, 8}: one at random). It waits until the game is ready: `steady` seconds in a row in the zone, idle / engaged /
+-- resting, no menu open, and at least `after_zone` seconds after loading or zoning. gs c lockstyle: send it again.
+SMN_LOCKSTYLE = {set = nil, steady = 3, after_zone = 10}
+
 -- HUD -----------------------------------------------------------------------------------------------------------------
 -- x / y: starting position. Once the HUD has been moved with the mouse, its position is saved
 -- in SMN-USER/hud-position.txt (delete that file to go back to x / y). The compact HUD (gs c hub lite)

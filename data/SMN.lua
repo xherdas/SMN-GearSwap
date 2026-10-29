@@ -63,11 +63,13 @@ function get_sets()
 	if SMN_MACROS and SMN_MACROS.book then
 		send_command(('wait 1;input /macro book %d;wait .2;input /macro set %d'):format(SMN_MACROS.book, SMN_MACROS.set or 1))
 	end
+	smn_lockstyle()   -- SMN_LOCKSTYLE: sent once the game is ready
 end
 
 function file_unload()
 	-- Stop the running loop: otherwise it would keep going with the old file after gs reload / gs load
 	smn_auto_stop('reload')
+	smn_lockstyle_stop()
 	smn_unbind_keys()
 	enable(unpack(SMN_ALL_SLOTS))
 end
