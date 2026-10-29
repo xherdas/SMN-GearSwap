@@ -1,0 +1,12 @@
+# Files written by the GearSwap file while playing (personal, never commit)
+data/SMN-USER/hud-position*.txt
+data/SMN-USER/ward-selection.txt
+data/SMN-USER/ward-timers.txt
+data/SMN-USER/conduit-log.txt
+data/SMN-USER/conduit-trace.txt
+# Per-character configs (SMN-USER/<Character>.lua): keep only the template user.lua
+data/SMN-USER/*.lua
+!data/SMN-USER/user.lua
+
+# Release archives
+release/
