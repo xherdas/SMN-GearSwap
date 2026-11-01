@@ -87,7 +87,7 @@ local toggle_actions = {
 local recast_list = {
     {label = 'Rage',      id = 173},
     {label = 'Ward',      id = 174},
-    {label = 'Apogee',    ability = 'Apogee'},
+    {label = 'Apogee',    ability = 'Apogee', hint = 'apogee'},           -- gold, blinking: good time (smn-rage)
     {label = 'Conduit',   ability = 'Astral Conduit'},
     {label = 'Flow',      id = 0},   -- Astral Flow (2-hour recast)
     {label = 'Mana Cede', ability = 'Mana Cede'},
@@ -184,6 +184,9 @@ local function section_recasts(lines)
             elseif r.hint == 'atomos' and smn_atomos_hint then
                 good, window = smn_atomos_hint()
                 blink = not (SMN_ATOMOS and SMN_ATOMOS.blink == false)
+            elseif r.hint == 'apogee' and smn_apogee_hint then
+                good, window = smn_apogee_hint(), true
+                blink = not (SMN_APOGEE and SMN_APOGEE.blink == false)
             end
             if good then
                 -- Blinks with the 1 s refresh when there is a window before the next Rage; steady gold otherwise

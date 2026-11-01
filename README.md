@@ -94,13 +94,15 @@ pact ("Unable to use job ability") is resent quickly, and a refused or dropped p
 between the next ones. Reset on zone change. Tune it in `SMN_AUTO.lag`.
 Lag Mode (Alt+F11) switches the Conduit loop to a safer timing (`SMN_RAGE.conduit.lag`).
 
-### Elemental Siphon and Atomos
+### Elemental Siphon, Atomos and Apogee
 - `gs c siphon`: summons the spirit of the weather / day (learned spirits only), Elemental Siphon, then
   your previous avatar comes back. HUD hint: `Siphon ● +<MP>` (estimated return) blinks gold when it's a
   good time, steady gold while your avatar fights with a Rage almost ready (`SMN_SIPHON`).
 - `gs c atomos`: Release, Atomos on your target (its two Blood Pacts steal a buff for the party), then
   your previous avatar comes back. The HUD `Dispel :` line lists the buffs seen on your target, most
   recent first; `Atomos ●` turns gold when it's ready and the target has one (`SMN_ATOMOS`).
+- Apogee: `Apogee ●` blinks gold while your avatar fights, right after its Rage #1, when you have the MP for
+  one more Rage at once (`SMN_APOGEE`).
 
 ### Skill-up
 Summoning skill-up in combat (Ctrl+F12) or in town (Alt+F12), from the smnSkill addon. MP between cycles:

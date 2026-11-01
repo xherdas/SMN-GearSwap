@@ -16,6 +16,7 @@ First version shared outside its author. Built on Pergatory's SMN GearSwap.
   while your avatar fights with Rage almost ready.
 - Atomos (`gs c atomos`): Release, Atomos on the target, then the previous avatar comes back. HUD Dispel line
   with the target's buffs (most recent first) and an Atomos hint.
+- Apogee hint: the Apogee recast blinks gold right after a Rage when you have the MP for one more at once.
 - Resummon last avatar, avatar death and low MP alerts.
 - Refresh: Gishdubar Sash only on yourself (`.Self` midcast variant), Refresh received set when another
   player casts Refresh on you.
@@ -23,5 +24,5 @@ First version shared outside its author. Built on Pergatory's SMN GearSwap.
 - Configurable keys (plus your own keys with any command), per-character config file
   (`SMN-USER/<Character>.lua`), macro book and style lock on load (sent once the game is ready, `gs c lockstyle`).
 
-Not yet verified in game (feedback welcome): the Atomos Dispel line and hint, the Refresh received set, and
-Elemental Siphon during skill-up.
+Not yet verified in game (feedback welcome): the Atomos Dispel line and hint, the Apogee hint, the Refresh received
+set, and Elemental Siphon during skill-up.

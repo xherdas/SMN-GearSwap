@@ -71,6 +71,27 @@ function smn_rage_cost(name)
 end
 
 
+-- Apogee hint (HUD recast turns gold, SMN_APOGEE): Apogee ready while your avatar fights, its Rage #1 just used
+-- (recast >= min_recast seconds) and enough MP for it under Apogee (x1.5): Apogee = one more Rage right away.
+-- Not during automation / Conduit, nor with Apogee / Astral Conduit already active. keep_for_conduit = true:
+-- no hint while Astral Conduit is ready (Apogee saved for the Conduit sequence).
+local apogee_ja = res.job_abilities:with('en', 'Apogee')
+local conduit_ja = res.job_abilities:with('en', 'Astral Conduit')
+function smn_apogee_hint()
+    local c = SMN_APOGEE or {}
+    if c.hint == false or not apogee_ja then return false end
+    local p = windower.ffxi.get_player()
+    if not p or p.main_job ~= 'SMN' or smn_ability_recast(apogee_ja.recast_id) > 0 then return false end
+    if smn_auto.task or R.seq or smn_buff_active('Apogee') or smn_buff_active('Astral Conduit') then return false end
+    if c.keep_for_conduit and conduit_ja and smn_ability_recast(conduit_ja.recast_id) == 0 then return false end
+    if not (pet.isvalid and pet.status == 'Engaged') then return false end
+    local _, list = smn_rage_list()
+    local ja = list and pact_info(list[1])
+    if not ja or ja.type ~= 'BloodPactRage' then return false end
+    if smn_ability_recast(RAGE_RECAST) < (c.min_recast or 15) then return false end
+    return p.vitals.mp >= math.ceil((ja.mp_cost or 0) * 1.5)
+end
+
 local function valid_target()
     local t = windower.ffxi.get_mob_by_target('t')
     return t and t.spawn_type == 16 and t.hpp > 0 and t.valid_target

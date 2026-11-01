@@ -206,6 +206,15 @@ SMN_ATOMOS = {
     ignore     = {},     -- buffs Atomos can't take, never listed (e.g. {'Mighty Strikes'})
 }
 
+-- Apogee hint: the Apogee recast turns gold and blinks when Apogee is ready, your avatar fights, its Rage #1
+-- (SMN_RAGE.pacts) was just used and you have the MP for it under Apogee (x1.5): one more Rage right away.
+SMN_APOGEE = {
+    hint       = true,
+    blink      = true,   -- false: always steady gold
+    min_recast = 15,     -- Rage recast left (seconds) to show the hint (shorter: just wait for the recast)
+    keep_for_conduit = false,  -- true: no hint while Astral Conduit is ready (Apogee saved for the Conduit sequence)
+}
+
 SMN_ALERTS = {
     death     = true,   -- chat alert when the avatar dies
     mp_low    = 300,    -- alert when MP drops below this threshold with an avatar out (once)
