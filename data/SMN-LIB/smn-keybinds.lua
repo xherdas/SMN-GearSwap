@@ -77,10 +77,16 @@ function smn_apply_keybinds(config)
     smn_unbind_keys()
     smn_key_labels = {}
 
-    -- Overrides: { key = "!f10" } or just "!f10"; unknown action names are reported
+    -- Overrides: { key = "!f10" } or just "!f10". Another name with a key and a command is your own action
+    -- (e.g. apogee = { key = "`", command = "input /ja Apogee <me>" }); anything else is reported
+    local custom = {}
     for name, o in pairs(overrides) do
         if not default_actions[name] then
-            smn_warn(('SMN_KEYBINDS: unknown action "%s" (ignored).'):format(tostring(name)))
+            if type(o) == 'table' and type(o.key) == 'string' and type(o.command) == 'string' then
+                custom[name] = {key = o.key, command = o.command, label = o.label, overridden = true}
+            else
+                smn_warn(('SMN_KEYBINDS: unknown action "%s" (ignored; your own key needs key and command).'):format(tostring(name)))
+            end
         elseif type(o) ~= 'table' and type(o) ~= 'string' and o ~= false then
             smn_warn(('SMN_KEYBINDS: %s must be { key = "..." } (ignored).'):format(name))
         end
@@ -97,6 +103,9 @@ function smn_apply_keybinds(config)
         end
         if action.key == false or action.key == "" then action.key = nil end
         if action.key then actions[name] = action end
+    end
+    for name, action in pairs(custom) do
+        if action.key ~= "" then actions[name] = action end
     end
 
     -- Same key on two actions: the one set in SMN_KEYBINDS wins over a default; otherwise the first by name

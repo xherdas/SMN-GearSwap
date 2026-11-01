@@ -51,6 +51,8 @@
 --   -- HUD
 --   hub_keybinds     Ctrl+PageDown    gs c hub keybinds        show / hide the keys in the HUD
 --   hub_lite         -                gs c hub lite            compact HUD
+-- Your own keys: any other name with a key and a command, e.g.
+--   apogee = { key = "`", command = "input /ja Apogee <me>" },
 SMN_KEYBINDS = {
     enable_binds = true,
     binds = {

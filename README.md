@@ -38,7 +38,8 @@ Requires the standard GearSwap libraries (`Modes.lua` from Mote's libs, shipped 
 
 ## Default keys
 
-`^` = Ctrl, `!` = Alt, `~` = Shift. Change or remove any key in `SMN_KEYBINDS` (top of `user.lua`).
+`^` = Ctrl, `!` = Alt, `~` = Shift. Change or remove any key in `SMN_KEYBINDS` (top of `user.lua`), or add your
+own: `apogee = { key = "^a", command = "input /ja Apogee <me>" }`.
 
 | Key | Action |
 |---|---|

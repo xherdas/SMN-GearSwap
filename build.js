@@ -45,6 +45,9 @@ if (cut < 0) throw new Error('function user_sets() not found in the live user.lu
 let config = liveUser.slice(0, cut)
   .replace('--  SMN - personal configuration', '--  SMN - configuration (copy to SMN-USER/<Character>.lua for a per-character config)')
   .replace(/SMN_MACROS = \{book = \d+, set = \d+\}/, 'SMN_MACROS = {book = nil, set = 1}   -- e.g. {book = 7, set = 1}')
+  // Keys: the player's own binds stay out of the package (only the commented example is kept)
+  .replace(/(SMN_KEYBINDS = \{\r?\n\s*enable_binds = true,\r?\n(\s*)binds = \{\r?\n\s*-- acc_mode = \{ key = "@f10" \},\r?\n)[\s\S]*?(\r?\n\2\},)/,
+    (m, head, ind, tail) => head.replace(/\r?\n$/, '') + tail)
   // Style lock: off in the package (the player's own equipment set number)
   .replace(/SMN_LOCKSTYLE = \{set = \d+,/, 'SMN_LOCKSTYLE = {set = nil,')
   // Siphon skill: the player's own value (nil = skill without gear, read from the game)
@@ -55,6 +58,9 @@ let config = liveUser.slice(0, cut)
   .replace(/^(\s*debug\s*=\s*)true(\s*,)/gm, '$1false$2');
 for (const check of ['SMN_MACROS = {book = nil', 'SMN_LOCKSTYLE = {set = nil,']) {
   if (!config.includes(check)) throw new Error('template: could not neutralize ' + check);
+}
+if (/binds = \{[^}]*-- acc_mode = \{ key = "@f10" \},\s*\n\s*[^-\s}]/.test(config)) {
+  throw new Error('template: personal keys left in SMN_KEYBINDS.binds');
 }
 const sets = fs.readFileSync(path.join(here, 'template', 'sets-pergatory.lua'), 'utf8');
 fs.writeFileSync(path.join(out, 'SMN-USER', 'user.lua'), config + 'function user_sets()\n' + sets + 'end\n');
