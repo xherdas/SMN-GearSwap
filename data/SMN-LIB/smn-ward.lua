@@ -117,8 +117,10 @@ function smn_pact_entry(name, opts, known)
         status_name = opts.status and opts.status:lower() or nil, -- status entered by hand (by its name)
         duration = opts.duration, -- duration entered by hand, for wards without a status
         base_duration = opts.duration or ja.duration or 0, -- for the Smart Buff order (longest first)
-        -- Effect name shown in the HUD, e.g. Aerial Armor -> Blink
-        effect = (opts.label or opts.status or (status and res.buffs[status] and res.buffs[status].en) or ''):gsub('^%l', string.upper),
+        -- Effect name shown in the HUD, e.g. Aerial Armor -> Blink. The resource status first, so the effect
+        -- shows instead of the pact name (Wind's Blessing -> Magic Shield).
+        effect = (opts.label or opts.status or (ja.status and res.buffs[ja.status] and res.buffs[ja.status].en)
+            or (status and res.buffs[status] and res.buffs[status].en) or ''):gsub('^%l', string.upper),
         known = (known == false) or (known[s.id] and true or false),   -- list unavailable: assumed learned
         keep = smn_pact_keeps(ja.en),  -- the avatar stays out after this pact (SMN_WARD.keep_avatar)
     }
