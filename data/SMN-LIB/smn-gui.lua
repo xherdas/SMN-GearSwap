@@ -1,6 +1,6 @@
 -- ===================================================================================================================
 --  SMN-LIB: HUD
---  The text is rebuilt every second (and after each command), then sent only if it changed.
+--  The text is rebuilt every half second (and after each command), then sent only if it changed.
 --  Sections: Avatar, Recasts, Rage, Wards, Skill-up, Options. Can be hidden
 --  (gs c hub avatar|recasts|rage|wards|auto|modes|options|all),
 --  compact version (gs c hub lite), keys shown or not (gs c hub keybinds).
@@ -133,8 +133,9 @@ end
 local READY_MARK = (SMN_HUD and SMN_HUD.ready_mark) or '●'
 
 local function fmt_recast(seconds)
+    -- Rounded down, like the game: the last second shows 0:00, then the ready mark
     if not seconds or seconds <= 0 then return C_ON .. READY_MARK .. C_END end
-    seconds = math.ceil(seconds)
+    seconds = math.floor(seconds)
     return ('%d:%02d'):format(math.floor(seconds / 60), seconds % 60)
 end
 
@@ -626,8 +627,9 @@ function smn_hud_update()
     hud:show()
 end
 
--- Refresh every second (recasts, avatar HP, MP)
+-- Refresh every half second (recasts, avatar HP, MP), so a recast isn't shown up to a second late
 local last_tick = 0
+local last_update = 0
 local last_vis_check = 0
 windower.register_event('prerender', function()
     -- Hide quickly when the loading screen starts (every 0.25 s, not just on the 1 s refresh)
@@ -636,10 +638,13 @@ windower.register_event('prerender', function()
         last_vis_check = c
         if hud:visible() and not in_game() then hud:hide() end
     end
+    if c - last_update >= 0.5 then
+        last_update = c
+        smn_hud_update()
+    end
     local now = os.time()
     if now ~= last_tick then
         last_tick = now
-        smn_hud_update()
         if hud and in_game() then check_position() end
     end
 end)
