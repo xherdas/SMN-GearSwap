@@ -62,7 +62,7 @@ Feature freeze while this list is in progress: fixes only, no new features.
       close to the estimate.
 - [ ] Atomos: when a mob gains a buff, `Dispel : <buff>` shows under the recasts (target it, most recent first); gone
       when the buff wears off / is dispelled / stolen. `Atomos ●` blinks gold when ready with a buffed target.
-- [ ] Apogee hint: `Apogee ●` blinks gold while your avatar fights, right after its Rage #1 (recast ≥ 15 s) with
+- [x] Apogee hint: `Apogee ●` blinks gold while your avatar fights, right after its Rage #1 (recast ≥ 15 s) with
       the MP for it ×1.5; normal green otherwise (no fight, Rage almost ready, low MP, Conduit sequence).
 - [x] `gs c atomos`: Release, Atomos on the target, its two Blood Pacts, it leaves (no death alert), then the
       previous avatar comes back. F12 during Atomos: no resummon.

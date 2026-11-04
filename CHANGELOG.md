@@ -24,5 +24,5 @@ First version shared outside its author. Built on Pergatory's SMN GearSwap.
 - Configurable keys (plus your own keys with any command), per-character config file
   (`SMN-USER/<Character>.lua`), macro book and style lock on load (sent once the game is ready, `gs c lockstyle`).
 
-Not yet verified in game (feedback welcome): the Atomos Dispel line and hint, the Apogee hint, the Refresh received
+Not yet verified in game (feedback welcome): the Atomos Dispel line and hint, the Refresh received
 set, and Elemental Siphon during skill-up.
