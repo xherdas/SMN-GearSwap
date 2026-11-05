@@ -36,7 +36,9 @@ local default_actions = {
     auto_favor     = {key = "^insert", command = "gs c autofavor"},
     smart_buff     = {key = "^delete", command = "gs c smartbuff"},
     -- Rages by macro: /console gs c rage 1 | 2 | 3 ... (number in SMN_RAGE.pacts)
-    resummon       = {key = "^pageup",   command = "gs c resummon"},
+    resummon       = {key = "^pageup",   command = "gs c resummon"},   -- summons the selected avatar
+    avatar_prev    = {key = "!pageup",   command = "gs c avatar prev"},
+    avatar_next    = {key = "!pagedown", command = "gs c avatar next"},
     siphon         = {key = nil,         command = "gs c siphon"},
     atomos         = {key = nil,         command = "gs c atomos"},
     rage_conduit   = {key = "^f11",      command = "gs c rage conduit"},

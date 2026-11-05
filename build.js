@@ -55,8 +55,10 @@ let config = liveUser.slice(0, cut)
   // 'Move' idle mode: kept in the package for players with SMN_AUTO_MOVE = false (removed from the live list)
   .replace(/^(SMN_IDLE_MODES = \{[^}\n]*?)\}/m, (m, list) => list.includes("'Move'") ? m : list + ",'Move'}")
   // debug flags always off in the package (the debug module isn't shipped anyway)
-  .replace(/^(\s*debug\s*=\s*)true(\s*,)/gm, '$1false$2');
-for (const check of ['SMN_MACROS = {book = nil', 'SMN_LOCKSTYLE = {set = nil,']) {
+  .replace(/^(\s*debug\s*=\s*)true(\s*,)/gm, '$1false$2')
+  // Avatar selected by default (SMN_AVATAR_PICK): the player's own choice
+  .replace(/^(\s*default\s*=\s*)'[^']*',/m, '$1nil,');
+for (const check of ['SMN_MACROS = {book = nil', 'SMN_LOCKSTYLE = {set = nil,', 'default     = nil,']) {
   if (!config.includes(check)) throw new Error('template: could not neutralize ' + check);
 }
 if (/binds = \{[^}]*-- acc_mode = \{ key = "@f10" \},\s*\n\s*[^-\s}]/.test(config)) {

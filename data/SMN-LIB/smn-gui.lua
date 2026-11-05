@@ -125,6 +125,17 @@ local function key_label(action)
     return l and (C_KEY .. l .. C_END .. ' ') or ''
 end
 
+local function hint_rows(lines, rows)
+    for _, row in ipairs(rows) do
+        local hints = {}
+        for _, h in ipairs(row) do
+            local l = key_label(h[1])
+            if l ~= '' then hints[#hints + 1] = l .. C_LABEL .. h[2] .. C_END end
+        end
+        if #hints > 0 then lines[#lines + 1] = ' ' .. table.concat(hints, '  ') end
+    end
+end
+
 local function on_off(value)
     return value and (C_ON .. 'ON' .. C_END) or (C_OFF .. 'OFF' .. C_END)
 end
@@ -155,14 +166,35 @@ local function master_mp()
     return p.vitals.mp, p.vitals.max_mp or 0
 end
 
+-- Choosing (gs c avatar prev | next, closes on its own): "Ramuh  < Diabolos >  Cait Sith" (previous / next in grey),
+-- shown in place of the avatar so the HUD keeps its height. nil when not choosing.
+local function avatar_selector(sel)
+    local list = smn_avatar_picking() and smn_avatar_choices() or {}
+    if #list == 0 then return nil end
+    local i = 1
+    for n, name in ipairs(list) do
+        if name == sel then i = n end
+    end
+    local function at(o) return list[(i - 1 + o) % #list + 1] end
+    local center = C_TITLE .. '< ' .. C_END .. avatar_name(at(0)) .. C_TITLE .. ' >' .. C_END
+    if #list == 1 then return center end
+    return ('%s%s%s  %s  %s%s%s'):format(C_DIM, at(-1), C_END, center, C_DIM, at(1), C_END)
+end
+
 -- Sections ------------------------------------------------------------------------------------------------------------
 local function section_avatar(lines)
     lines[#lines + 1] = {title = 'Avatar'}
     local a = avatar_info()
-    if a then
-        lines[#lines + 1] = (' %s  HP %d%%  TP %d'):format(avatar_name(a.name), a.hpp, a.tp)
+    -- Avatar the summon key (resummon) would bring: shown when it isn't the one out
+    local sel = smn_avatar_selected()
+    local next_s = (sel and not (a and a.name == sel)) and ('   ' .. C_LABEL .. 'Next :' .. C_END .. ' ' .. avatar_name(sel)) or ''
+    local selector = avatar_selector(sel)
+    if selector then
+        lines[#lines + 1] = ' ' .. selector
+    elseif a then
+        lines[#lines + 1] = (' %s  HP %d%%  TP %d'):format(avatar_name(a.name), a.hpp, a.tp) .. next_s
     else
-        lines[#lines + 1] = C_DIM .. ' No avatar' .. C_END
+        lines[#lines + 1] = C_DIM .. ' No avatar' .. C_END .. next_s
     end
     local mp, max_mp = master_mp()
     lines[#lines + 1] = (' MP %d/%d   %sFavor :%s %s'):format(mp, max_mp, C_LABEL, C_END, on_off(smn_favor_active()))
@@ -251,17 +283,6 @@ local function buff_remaining(name)
         end
     end
     return nil
-end
-
-local function hint_rows(lines, rows)
-    for _, row in ipairs(rows) do
-        local hints = {}
-        for _, h in ipairs(row) do
-            local l = key_label(h[1])
-            if l ~= '' then hints[#hints + 1] = l .. C_LABEL .. h[2] .. C_END end
-        end
-        if #hints > 0 then lines[#lines + 1] = ' ' .. table.concat(hints, '  ') end
-    end
 end
 
 -- Rage: list for the avatar out (shown only with an avatar), MP cost, Conduit sequence
@@ -449,7 +470,11 @@ local function section_options(lines)
     end
     -- Key-only actions: shown with the keys, hidden with them (Hide keybinds)
     if state.HudKeybinds.value and smn_key_labels.resummon then
-        lines[#lines + 1] = (' %s%sResummon last avatar%s'):format(key_label('resummon'), C_LABEL, C_END)
+        lines[#lines + 1] = (' %s%sSummon selected avatar%s'):format(key_label('resummon'), C_LABEL, C_END)
+    end
+    if state.HudKeybinds.value and (smn_key_labels.avatar_prev or smn_key_labels.avatar_next) then
+        lines[#lines + 1] = (' %s%s%sChoose avatar%s'):format(key_label('avatar_prev'), key_label('avatar_next'),
+            C_LABEL, C_END)
     end
     if state.HudKeybinds.value and smn_key_labels.hub_keybinds then
         lines[#lines + 1] = (' %s%sHide keybinds%s'):format(key_label('hub_keybinds'), C_DIM, C_END)
@@ -461,8 +486,16 @@ local function build_lite()
     local parts = {}
     local a = avatar_info()
     if not state.HudHideAvatar.value then
-        parts[#parts + 1] = (a and ('%s %d%% TP%d'):format(a.name, a.hpp, a.tp) or 'No avatar')
-            .. (smn_favor_active() and (' ' .. C_ON .. 'Favor' .. C_END) or '')
+        local sel = smn_avatar_selected()
+        local selector = avatar_selector(sel)
+        if selector then
+            parts[#parts + 1] = selector
+        else
+            -- "> Diabolos": the avatar the summon key would bring, when it isn't the one out
+            parts[#parts + 1] = (a and ('%s %d%% TP%d'):format(a.name, a.hpp, a.tp) or 'No avatar')
+                .. (smn_favor_active() and (' ' .. C_ON .. 'Favor' .. C_END) or '')
+                .. ((sel and not (a and a.name == sel)) and (' ' .. C_LABEL .. '>' .. C_END .. ' ' .. avatar_name(sel)) or '')
+        end
     end
     if not state.HudHideRecasts.value then
         local recasts = windower.ffxi.get_ability_recasts() or {}

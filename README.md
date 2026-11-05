@@ -45,7 +45,7 @@ own: `apogee = { key = "^a", command = "input /ja Apogee <me>" }`.
 |---|---|
 | F9 / Alt+F9 | Idle Mode: quick cycle (`SMN_IDLE_QUICK`) forward / back |
 | Ctrl+F9 | Weapon Lock |
-| F10 | Treasure Hunter **Tag** on / off (your first spell / JA / WS on each mob gets TH gear) |
+| F10 | Treasure Hunter **Tag** on / off (on by default: your first spell / JA / WS on each mob gets TH gear) |
 | Alt+F10 | Treasure Hunter **Persistent** on / off |
 | Ctrl+F10 | Kiting (movement gear also while engaged) |
 | Ctrl+F11 | **Conduit sequence** |
@@ -58,7 +58,8 @@ own: `apogee = { key = "^a", command = "input /ja Apogee <me>" }`.
 | Ctrl+Home | Run the ward under the cursor |
 | Ctrl+Shift+Home | Same, then keep that avatar out |
 | Ctrl+Insert / Ctrl+Delete | Auto Favor / Smart Buff |
-| Ctrl+PageUp | Resummon the last avatar |
+| Alt+PageUp / Alt+PageDown | Choose an avatar (on the HUD Avatar line) |
+| Ctrl+PageUp | Summon the selected avatar (the last one unless you changed it) |
 | Ctrl+PageDown | Show / hide the keys in the HUD |
 
 ---
@@ -94,6 +95,14 @@ pact ("Unable to use job ability") is resent quickly, and a refused or dropped p
 between the next ones. Reset on zone change. Tune it in `SMN_AUTO.lag`.
 Lag Mode (Alt+F11) switches the Conduit loop to a safer timing (`SMN_RAGE.conduit.lag`).
 
+### Avatar selection
+Alt+PageUp / Alt+PageDown turn the HUD Avatar line into a selector for a few seconds
+(`Ramuh  < Diabolos >  Cait Sith`: learned avatars, in the game's Magic menu order), so the HUD keeps its
+height. Ctrl+PageUp summons the selection (Release first if another avatar is out). The selection follows
+each new avatar out, so Ctrl+PageUp resummons the last one unless you changed it; `Next : Diabolos` shows
+when it isn't the avatar out. Also in the lite HUD. Your own order, a default avatar and the delay:
+`SMN_AVATAR_PICK`.
+
 ### Elemental Siphon, Atomos and Apogee
 - `gs c siphon`: summons the spirit of the weather / day (learned spirits only), Elemental Siphon, then
   your previous avatar comes back. HUD hint: `Siphon ● +<MP>` (estimated return) blinks gold when it's a
@@ -110,7 +119,7 @@ Elemental Siphon, Convert, Siphon again, then resting (Siphon is skipped without
 `gs c skill status` shows a summary.
 
 ### Other
-Resummon and avatar death alert, low MP alert, Refresh (Gishdubar Sash only on yourself; a Refresh
+Avatar death alert, low MP alert, Refresh (Gishdubar Sash only on yourself; a Refresh
 received set while another player casts Refresh on you), Treasure Hunter (Tag / Persistent), movement
 gear while moving (always in towns), Councilor's Garb in Adoulin, optional Town set (equipped over your
 idle set), style lock on load (`SMN_LOCKSTYLE`, sent once the game is ready; `gs c lockstyle` to send it again).

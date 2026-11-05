@@ -17,10 +17,11 @@ First version shared outside its author. Built on Pergatory's SMN GearSwap.
 - Atomos (`gs c atomos`): Release, Atomos on the target, then the previous avatar comes back. HUD Dispel line
   with the target's buffs (most recent first) and an Atomos hint.
 - Apogee hint: the Apogee recast blinks gold right after a Rage when you have the MP for one more at once.
-- Resummon last avatar, avatar death and low MP alerts.
+- Avatar selection: Alt+PageUp / Alt+PageDown on the HUD Avatar line, Ctrl+PageUp summons it (the last avatar
+  unless changed). Avatar death and low MP alerts.
 - Refresh: Gishdubar Sash only on yourself (`.Self` midcast variant), Refresh received set when another
   player casts Refresh on you.
-- Treasure Hunter Tag / Persistent; movement gear; Adoulin body; optional Town overlay set.
+- Treasure Hunter Tag (on by default) / Persistent; movement gear; Adoulin body; optional Town overlay set.
 - Configurable keys (plus your own keys with any command), per-character config file
   (`SMN-USER/<Character>.lua`), macro book and style lock on load (sent once the game is ready, `gs c lockstyle`).
 

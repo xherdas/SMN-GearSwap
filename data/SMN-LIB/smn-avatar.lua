@@ -2,7 +2,10 @@
 --  SMN-LIB: avatar tools
 --    gs c siphon    Elemental Siphon in one command: spirit of the weather element (or the day's), Siphon,
 --                   Release, then the previous avatar comes back. The Siphon set (day / weather) comes from smn-main.
---    gs c resummon  Resummons the last avatar (after its death or a Release).
+--    gs c resummon  Summons the selected avatar (Release first if another one is out). The selection follows
+--                   each new avatar out, so with no change it resummons the last one.
+--    gs c avatar prev | next  Moves the selection (the HUD Avatar line becomes
+--                   a selector for a few seconds, SMN_AVATAR_PICK).
 --    Alerts (chat): avatar death, low MP with an avatar out (SMN_ALERTS in user.lua).
 --    Siphon hint (HUD): the Siphon recast dot turns gold and blinks when it's a good time to Siphon (SMN_SIPHON).
 --    gs c atomos    Atomos on the target (Deconstruction, Chronoshift, then it leaves), then the previous
@@ -21,7 +24,9 @@ local SPIRITS = {
 local function acfg() return SMN_ALERTS or {} end
 
 smn_avatar = {
-    last = nil,   -- last avatar (not spirits) seen out, for gs c resummon
+    last = nil,   -- last avatar (not spirits) seen out (Siphon / Atomos bring it back)
+    sel = nil,    -- avatar gs c resummon summons: follows last, moved by gs c avatar prev | next
+    pick_until = nil,  -- os.clock() until which the HUD shows the selection list
 }
 local A = smn_avatar
 
@@ -329,14 +334,61 @@ end
 -- RESUMMON
 ---------------------------------------------------------------------------
 function smn_resummon()
+    local name = smn_avatar_selected()
+    if not name then return smn_warn('No avatar to summon.') end
     local cur = smn_pet()
-    if cur then return smn_echo(cur.name .. ' is already out.') end
-    if not A.last then return smn_warn('No avatar to resummon.') end
-    local name = A.last
+    if cur and cur.name == name then return smn_echo(name .. ' is already out.') end
+    A.pick_until = nil
     smn_auto_stop('replaced by resummon')
     smn_auto_start('resummon', function(gen)
-        summon_back(gen, name, function() smn_auto_finish(gen) end)
+        smn_release(gen, function(ok)
+            if not ok then return smn_auto_finish(gen) end
+            summon_back(gen, name, function() smn_auto_finish(gen) end)
+        end)
     end)
+end
+
+---------------------------------------------------------------------------
+-- AVATAR SELECTION
+---------------------------------------------------------------------------
+-- Same order as the game's Magic menu, without Odin / Alexander (Astral Flow only) and Atomos (gs c atomos)
+local AVATAR_ORDER = {'Carbuncle', 'Fenrir', 'Ifrit', 'Titan', 'Leviathan', 'Garuda', 'Shiva', 'Ramuh', 'Diabolos',
+                      'Cait Sith', 'Siren'}
+
+local function pcfg() return SMN_AVATAR_PICK or {} end
+
+-- Learned avatars, in SMN_AVATAR_PICK.order (element order by default)
+function smn_avatar_choices()
+    local known = windower.ffxi.get_spells() or {}
+    local list = {}
+    for _, name in ipairs(pcfg().order or AVATAR_ORDER) do
+        local s = res.spells:with('en', name)
+        if s and known[s.id] then list[#list + 1] = s.en end
+    end
+    return list
+end
+
+-- Before any avatar is seen out (load, login): SMN_AVATAR_PICK.default
+function smn_avatar_selected() return A.sel or A.last or pcfg().default end
+
+-- The HUD selector is shown (a key pressed in the last SMN_AVATAR_PICK.close_after seconds)
+function smn_avatar_picking() return A.pick_until ~= nil and os.clock() < A.pick_until end
+
+-- gs c avatar prev | next: the first press opens the list on the selection, the next ones move it (wraps around)
+function smn_avatar_pick(step)
+    local list = smn_avatar_choices()
+    if #list == 0 then return smn_warn('No avatar learned.') end
+    local i = 0
+    for n, name in ipairs(list) do
+        if name == smn_avatar_selected() then i = n end
+    end
+    if i == 0 then
+        i = 1
+    elseif smn_avatar_picking() then
+        i = (i - 1 + step) % #list + 1
+    end
+    A.sel = list[i]
+    A.pick_until = os.clock() + (pcfg().close_after or 3)
 end
 
 ---------------------------------------------------------------------------
@@ -351,14 +403,16 @@ local function check_alerts()
     local mob = smn_pet()
 
     if mob then
-        if smn_is_avatar(mob.name) then A.last = mob.name end
+        -- A new avatar out moves the selection to it
+        if smn_is_avatar(mob.name) and mob.name ~= A.last then A.last, A.sel = mob.name, mob.name end
         seen = {name = mob.name, hpp = mob.hpp or 100, status = mob.status}
     elseif seen then
         -- The avatar disappeared: at 0 % HP (or dead), it's a death, not a Release
         local released = smn_release_at and (os.clock() - smn_release_at) < 5
         if acfg().death ~= false and not released and seen.name ~= 'Atomos' and (seen.hpp == 0 or seen.status == 2 or seen.status == 3) then
             local key = smn_key_labels.resummon
-            smn_warn(('%s died! %s'):format(seen.name, key and (key .. ' to resummon.') or '(gs c resummon)'))
+            local sel = smn_avatar_selected() or seen.name
+            smn_warn(('%s died! %s'):format(seen.name, key and ('%s to summon %s.'):format(key, sel) or '(gs c resummon)'))
         end
         seen = nil
     end

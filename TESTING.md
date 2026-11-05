@@ -16,7 +16,7 @@ Feature freeze while this list is in progress: fixes only, no new features.
 
 ## 2. Keys and HUD
 - [x] Every default key in the *Available actions* table (top of `user.lua`) does what it says.
-- [x] Ctrl+PageDown hides / shows the keys in the HUD (and the "Resummon last avatar" line).
+- [x] Ctrl+PageDown hides / shows the keys in the HUD (and the "Summon selected avatar" / "Choose avatar" lines).
 - [x] `gs c hub lite`: compact HUD, its own saved position, back to the normal HUD at its own position.
 - [x] Dragging the HUD saves its position (still there after `//gs reload`).
 - [x] Section titles stretch to the HUD width; the width doesn't change during a Ward rotation.
@@ -30,6 +30,7 @@ Feature freeze while this list is in progress: fixes only, no new features.
 - [x] Weapon Lock (Ctrl+F9) and `gs c opa`: weapons equipped and locked; turning either off frees them.
 
 ## 4. Treasure Hunter
+- [x] Tag is on after loading (HUD Treasure : Tag).
 - [x] F10 (Tag) then Dia on a mob: TH gear, `TH tagged: <mob>`; Dia again on it: normal gear, no message;
       Dia on another mob: TH gear again. Tag stays on until F10 again.
 - [x] Alt+F10 (Persistent): TH gear on every offensive action and while engaged; off again with Alt+F10.
@@ -55,6 +56,9 @@ Feature freeze while this list is in progress: fixes only, no new features.
 
 ## 7. Avatar
 - [x] Avatar death: chat alert with the resummon key; Ctrl+PageUp resummons it.
+- [x] Avatar selection: Alt+PageUp / Alt+PageDown show `prev  < X >  next` on the Avatar line (HUD height
+      unchanged), back to normal after 3 s with `Next : X`; Ctrl+PageUp summons X (Release first if another
+      avatar is out). Same in the lite HUD. `SMN_AVATAR_PICK.default`: selected after loading with no avatar.
 - [x] `gs c siphon`: spirit of the weather / day, Elemental Siphon, the previous avatar comes back.
 - [x] Low MP alert once below `mp_low`, again only after MP went back up.
 - [x] Siphon hint: with Siphon ready and enough MP missing, `Siphon ● +<MP>` blinks gold; not during a

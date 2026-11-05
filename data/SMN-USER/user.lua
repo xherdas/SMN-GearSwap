@@ -42,7 +42,9 @@
 --   ward_one_stay    Ctrl+Shift+Home  gs c ward one stay       same, then keep its avatar out
 --   -- Rages, avatar, automation
 --   rage_conduit     Ctrl+F11         gs c rage conduit        Conduit sequence
---   resummon         Ctrl+PageUp      gs c resummon            resummon the last avatar
+--   resummon         Ctrl+PageUp      gs c resummon            summon the selected avatar (the last one unless changed)
+--   avatar_prev      Alt+PageUp       gs c avatar prev         avatar selection up (on the HUD Avatar line)
+--   avatar_next      Alt+PageDown     gs c avatar next         avatar selection down
 --   siphon           -                gs c siphon              Elemental Siphon (weather / day spirit)
 --   atomos           -                gs c atomos              Atomos on the target, then the previous avatar
 --   skill_pact       Ctrl+F12         gs c skill pact          skill-up in combat
@@ -110,7 +112,7 @@ SMN_DEFAULTS = {
     ImpactDebuff = false,
     ForceIlvl = false,
     LagMode = false,       -- lag (crowded zones): delayed BP gear + safer Conduit timing (SMN_RAGE.conduit.lag)
-    TreasureMode = 'None',  -- Treasure Hunter: 'None', 'Tag' or 'Persistent'
+    TreasureMode = 'Tag',   -- Treasure Hunter: 'None', 'Tag' or 'Persistent'
     Empy = false,          -- Empy set for Wards
     SacTorque = true,      -- Sacrifice Torque if asleep with an avatar out
     AutoRemedy = false,    -- automatic Remedy if paralyzed
@@ -176,7 +178,7 @@ SMN_AUTO = {
 --                                then Release and the previous avatar comes back
 --   gs c atomos                  Atomos on the target (steals a buff for the party with its two Blood Pacts,
 --                                then leaves), then the previous avatar comes back
---   gs c resummon (Ctrl+PageUp)  resummon the last avatar (after its death or a Release)
+--   gs c resummon (Ctrl+PageUp)  summon the selected avatar (Alt+PageUp / PageDown to choose; the last one unless changed)
 -- Siphon hint: in the HUD, the Siphon recast turns gold and blinks, with the estimated MP (Siphon ● +730),
 -- when it's a good time: Siphon ready, nothing running and enough MP missing for the estimate. While your avatar
 -- fights, it only blinks with a Rage recast long enough for the whole cycle (steady gold: a Rage is almost ready).
@@ -213,6 +215,14 @@ SMN_APOGEE = {
     blink      = true,   -- false: always steady gold
     min_recast = 15,     -- Rage recast left (seconds) to show the hint (shorter: just wait for the recast)
     keep_for_conduit = false,  -- true: no hint while Astral Conduit is ready (Apogee saved for the Conduit sequence)
+}
+
+-- Avatar selection: Alt+PgUp / Alt+PgDn turn the HUD Avatar line into a selector (Ramuh < Diabolos > Cait Sith),
+-- Ctrl+PgUp (resummon) summons the selection (Release first if another avatar is out).
+SMN_AVATAR_PICK = {
+    order       = nil,   -- nil: the game's Magic menu order; or your own list, e.g. {'Siren', 'Ifrit', 'Garuda'}
+    default     = nil,  -- selected before any avatar is out (after a load / login); nil: none
+    close_after = 3,     -- seconds without a key before the Avatar line comes back
 }
 
 SMN_ALERTS = {

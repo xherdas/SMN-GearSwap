@@ -23,7 +23,8 @@ function smn_help()
 		{'ward_clear', 'Ward clear'}, {'ward_run', 'Ward run checked'}, {'ward_one', 'Ward under cursor'},
 		{'ward_one_stay', 'Ward under cursor, keep its avatar'},
 		{'rage_conduit', 'Conduit sequence'}, {'skill_pact', 'Skill-up (combat)'}, {'skill_summon', 'Skill-up (town)'},
-		{'resummon', 'Resummon last avatar'}, {'stop', 'Stop automation'}, {'hub_keybinds', 'Show/hide keybinds in HUD'},
+		{'avatar_prev', 'Avatar selection up'}, {'avatar_next', 'Avatar selection down'},
+		{'resummon', 'Summon selected avatar'}, {'stop', 'Stop automation'}, {'hub_keybinds', 'Show/hide keybinds in HUD'},
 	}
 	smn_echo(('SMN GearSwap %s - config: %s'):format(SMN_VERSION or '?', SMN_USER_FILE or 'SMN-USER/user.lua'))
 	smn_echo('Keys:')
@@ -50,7 +51,8 @@ function smn_help()
 		'gs c ward run [stay] | one [stay] | toggle <name>',
 		'gs c siphon                Elemental Siphon (spirit of weather / day)',
 		'gs c atomos                Atomos on <t> (steals a buff), then the previous avatar',
-		'gs c resummon              resummon the last avatar',
+		'gs c resummon              summon the selected avatar (the last one unless changed)',
+		'gs c avatar prev | next    move the avatar selection (HUD Avatar line)',
 		'gs c lockstyle             style lock again (SMN_LOCKSTYLE)',
 		'gs c skill pact | summon | status   gs c stop',
 		'gs c hub avatar|recasts|rage|wards|auto|modes|options|all|keybinds|lite',
@@ -161,6 +163,9 @@ local function handle_hub(section)
 end
 
 -- Returns true if the command is valid (idle gear and HUD are then refreshed)
+-- gs c avatar prev | next: direction of the avatar selection
+local AVATAR_STEP = {prev = -1, up = -1, next = 1, down = 1}
+
 local function dispatch(command)
 	local args = {}
 	for w in command:gmatch('%S+') do args[#args + 1] = w end
@@ -238,6 +243,11 @@ local function dispatch(command)
 		return 'silent'
 	elseif cmd == 'resummon' then
 		smn_resummon()
+		return 'silent'
+	-- gs c avatar prev | next (gs c avatar alone is still the Avatar idle mode, below)
+	elseif cmd == 'avatar' and AVATAR_STEP[(args[2] or ''):lower()] then
+		smn_avatar_pick(AVATAR_STEP[args[2]:lower()])
+		smn_hud_update()
 		return 'silent'
 	elseif cmd == 'lockstyle' then
 		smn_lockstyle(true)
