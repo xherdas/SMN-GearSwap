@@ -7,8 +7,8 @@ First version shared outside its author. Built on Pergatory's SMN GearSwap.
 - HUD: avatar, recasts, Rage list, Ward list, skill-up, modes and options; compact mode; saved positions.
 - Blood Pact: Ward rotations (Run, this ward, `stay`), Smart Buff (threshold, priority, longest first),
   combat mode, `gs c pact`.
-- Blood Pact: Rage by number (`gs c rage 1..4`), Conduit sequence with MP recovery, resummon on death,
-  log file.
+- Blood Pact: Rage by number (`gs c rage 1..4`; an offensive Ward there, e.g. Mewing Lullaby, on `<stnpc>`),
+  Conduit sequence with MP recovery, resummon on death, log file.
 - Live lag estimate and Conduit timing adjustment; Lag Mode.
 - Summoning skill-up (from the smnSkill addon). MP between cycles: Elemental Siphon, Convert, Siphon again,
   then resting; Siphon uses learned spirits only and is skipped without any.

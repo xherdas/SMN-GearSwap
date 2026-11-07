@@ -83,7 +83,7 @@ rage | wards | auto | modes | options | all | keybinds | lite`.
 
 ### Blood Pact: Rage
 - `gs c rage 1 | 2 | 3 | 4`: Rage n of the avatar out (`SMN_RAGE.pacts`). The HUD shows the first 3;
-  a 4th is for macros only (it may be a Ward on `<t>`, e.g. Mewing Lullaby).
+  a 4th is for macros only (it may be a Ward: an offensive one such as Mewing Lullaby opens target selection, `<stnpc>`).
 - **Conduit sequence** (Ctrl+F11): Astral Flow, Apogee, Rage ×2, Astral Conduit, then Rage #1 on a loop
   while the buff lasts. MP via Convert (/RDM) then items. If the avatar dies, it is resummoned and the
   loop resumes. One line per sequence in `SMN-USER/conduit-log.txt`.

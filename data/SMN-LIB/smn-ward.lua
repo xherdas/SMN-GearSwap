@@ -30,7 +30,8 @@ local W = smn_ward
 local function cfg() return SMN_WARD or {} end
 
 -- Can the ward target this type of target? (targets in resources: 1 Self, 4 Party, 32 Enemy)
-local function targets_has(ja, flag, name)
+-- Global: smn-rage uses it too (offensive Ward in the Rage list)
+function smn_targets_has(ja, flag, name)
     local t = ja.targets
     if type(t) == 'number' then return math.floor(t / flag) % 2 == 1 end
     if type(t) == 'table' then
@@ -46,8 +47,8 @@ end
 -- (Healing Ruby, Reraise II), <me> if area. <stnpc> and <stal> open target selection.
 local function default_target(ja)
     if ja.type == 'BloodPactRage' then return '<t>' end
-    if targets_has(ja, 32, 'Enemy') then return '<stnpc>' end
-    if targets_has(ja, 4, 'Party') then return '<stal>' end
+    if smn_targets_has(ja, 32, 'Enemy') then return '<stnpc>' end
+    if smn_targets_has(ja, 4, 'Party') then return '<stal>' end
     return '<me>'
 end
 

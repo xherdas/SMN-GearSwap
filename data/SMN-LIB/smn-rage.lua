@@ -1,6 +1,7 @@
 -- ===================================================================================================================
 --  SMN-LIB : Blood Pact: Rage
---    Macros: gs c rage 1 | 2 | 3 ... casts Rage n of the avatar out (SMN_RAGE.pacts), on <t>.
+--    Macros: gs c rage 1 | 2 | 3 ... casts Rage n of the avatar out (SMN_RAGE.pacts), on <t>
+--    (an offensive Ward in the list, e.g. Mewing Lullaby, on <stnpc>).
 --    Numbered list of the avatar's Rages in the HUD.
 --    Conduit sequence: Astral Flow, Apogee, Rage x2, Astral Conduit, then main Rage on a loop
 --    until Conduit ends. A JA on recast is skipped. F12 stops.
@@ -45,7 +46,7 @@ local pact_cache = {}
 local function pact_info(name)
     if pact_cache[name] == nil then
         local ja = res.job_abilities:with('en', name)
-        -- Rage or Ward: a Ward on <t> works too as an extra entry (e.g. Mewing Lullaby as Cait Sith #4)
+        -- Rage or Ward: a Ward works too as an extra entry (e.g. Mewing Lullaby as Cait Sith #4, on <stnpc>)
         pact_cache[name] = (ja and (ja.type == 'BloodPactRage' or ja.type == 'BloodPactWard')) and ja or false
         if not pact_cache[name] then smn_warn('Unknown Blood Pact: "' .. tostring(name) .. '".') end
     end
@@ -102,7 +103,10 @@ smn_conduit_trace = function() end
 
 local function fire(pact)
     smn_conduit_trace('send', pact)
-    send_command(('input /pet "%s" <t>'):format(pact))
+    local ja = pact_info(pact)
+    -- Offensive Ward in the Rage list (e.g. Mewing Lullaby): target selection, like the Ward list
+    local target = (ja and ja.type == 'BloodPactWard' and smn_targets_has(ja, 32, 'Enemy')) and '<stnpc>' or '<t>'
+    send_command(('input /pet "%s" %s'):format(pact, target))
 end
 
 ---------------------------------------------------------------------------

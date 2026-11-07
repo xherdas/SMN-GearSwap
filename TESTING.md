@@ -47,7 +47,7 @@ Feature freeze while this list is in progress: fixes only, no new features.
 - [x] `/console gs c pact Spring Water` (any pact, with summon and return).
 
 ## 6. Blood Pact: Rage
-- [x] `gs c rage 1..3` with each avatar you use; `gs c rage 4` (macro-only pact) where configured.
+- [x] `gs c rage 1..3` with each avatar you use; `gs c rage 4` (macro-only pact) where configured; with Cait Sith, Mewing Lullaby opens target selection.
 - [x] Conduit solo (Ctrl+F11): ~18 pacts under Conduit, 0 resend, `buff wore off` (or another clear end reason).
 - [x] Conduit in a crowded zone (DI), Lag Mode off: 13-15 pacts, 0 resend; Convert gap ~3 s.
 - [x] Conduit with Lag Mode (Alt+F11): completes without stopping.

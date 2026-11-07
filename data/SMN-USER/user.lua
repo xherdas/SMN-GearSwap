@@ -313,7 +313,7 @@ SMN_RAGE = {
         ['Fenrir']    = {'Eclipse Bite', 'Impact', 'Lunar Bay', 'Crescent Fang'},
         ['Diabolos']  = {'Blindside', 'Night Terror', 'Nether Blast'},
         ['Carbuncle'] = {'Holy Mist', 'Meteorite', 'Poison Nails'},
-        ['Cait Sith'] = {'Regal Gash', 'Regal Scratch', 'Level ? Holy', 'Mewing Lullaby'},  -- 4: Ward (sleep), macros
+        ['Cait Sith'] = {'Regal Gash', 'Regal Scratch', 'Level ? Holy', 'Mewing Lullaby'},  -- 4: Ward (sleep), macros, on <stnpc>
         ['Siren']     = {'Hysteric Assault', 'Tornado II', 'Sonic Buffet'},
     },
     hud_max = 3,   -- pacts shown in the HUD per avatar (the others: macros only)
